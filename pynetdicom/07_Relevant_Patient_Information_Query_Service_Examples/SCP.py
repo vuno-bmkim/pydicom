@@ -1,6 +1,7 @@
 import os
 
 from pydicom import dcmread
+from pydicom.data import get_testdata_files
 from pydicom.dataset import Dataset
 
 from pynetdicom import AE
@@ -11,6 +12,11 @@ ae = AE()
 
 # Add a requested presentation context
 ae.add_supported_context(GeneralRelevantPatientInformationQuery)
+
+
+def create_template(matching, ds):
+    return (matching)
+
 
 # Implement the AE.on_c_store callback
 def on_c_find(ds, context, info):
@@ -46,9 +52,15 @@ def on_c_find(ds, context, info):
     """
     # Import stored SOP Instances
     instances = []
+    filename = get_testdata_files('CT_small.dcm')[0]
+    filename2 = get_testdata_files("rtplan.dcm")[0]
+    instances.append(dcmread(filename))
+    instances.append(dcmread(filename2))
+    """
     fdir = '/path/to/directory'
     for fpath in os.listdir(fdir):
        instances.append(dcmread(os.path.join(fdir, fpath)))
+      """
 
     # Not a good example of how to match
     matching = [
@@ -65,6 +77,7 @@ def on_c_find(ds, context, info):
     elif len(matching) > 1:
         # More than 1 match found
         yield (0xC100, None)
+
 
 ae.on_c_find = on_c_find
 

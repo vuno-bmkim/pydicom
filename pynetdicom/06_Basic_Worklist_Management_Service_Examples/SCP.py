@@ -54,7 +54,6 @@ def on_c_find(ds, context, info):
     filename2 = get_testdata_files("rtplan.dcm")[0]
     instances.append(dcmread(filename))
     instances.append(dcmread(filename2))
-    print(dcmread(filename))
     """
     print(filename)
     fdir = '/path/to/directory'

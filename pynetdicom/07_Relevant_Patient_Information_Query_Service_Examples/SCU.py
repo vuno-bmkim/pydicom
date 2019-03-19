@@ -11,8 +11,7 @@ ae.add_requested_context(GeneralRelevantPatientInformationQuery)
 
 # Create our Identifier (query) dataset
 ds = Dataset()
-ds.PatientName = ''
-ds.PatientID = '1234567'
+ds.PatientID = '1CT1'
 ds.ContentTemplateSequence = [Dataset()]
 # Request the General Relevant Patient Information template (TID 9007)
 # See DICOM Standard, Part 16, Annex A, TID 9000-9007
