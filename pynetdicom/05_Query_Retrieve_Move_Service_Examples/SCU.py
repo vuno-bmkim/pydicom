@@ -11,9 +11,9 @@ ae.add_requested_context(PatientRootQueryRetrieveInformationModelMove)
 
 # Create out identifier (query) dataset
 ds = Dataset()
-ds.QueryRetrieveLevel = 'SERIES'
+ds.QueryRetrieveLevel = 'PATIENT'
 # Unique key for PATIENT level
-ds.PatientID = '1234567'
+ds.PatientID = '1CT1'
 # Unique key for STUDY level
 ds.StudyInstanceUID = '1.2.3'
 # Unique key for SERIES level

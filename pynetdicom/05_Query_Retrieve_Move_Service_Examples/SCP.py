@@ -1,6 +1,10 @@
+"""
+- 02_Storage_Service_Examples의 SCP도 port 11113으로 구동시키고 동작해야함. 
+"""
 import os
 
 from pydicom import dcmread
+from pydicom.data import get_testdata_files
 from pydicom.dataset import Dataset
 
 from pynetdicom import AE, StoragePresentationContexts
@@ -14,8 +18,13 @@ ae.requested_contexts = StoragePresentationContexts
 # Add a supported presentation context (QR Move SCP)
 ae.add_supported_context(PatientRootQueryRetrieveInformationModelMove)
 
+
+def get_known_aet():
+    return {b'STORE_SCP       ': ('127.0.0.1', 11113)}
+
+
 # Implement the AE.on_c_move callback
-def on_c_move(self, ds, move_aet, context, info):
+def on_c_move(ds, move_aet, context, info):
     """Respond to a C-MOVE request Identifier `ds`.
 
     Parameters
@@ -79,7 +88,7 @@ def on_c_move(self, ds, move_aet, context, info):
         return
 
     # Assuming known_ae_dict is {b'STORE_SCP       ' : ('127.0.0.1', 11113)}
-    (addr, port) = known_ae_dict[move_ae]
+    (addr, port) = known_aet_dict[move_aet]
 
     # Yield the IP address and listen port of the destination AE
     yield (addr, port)
@@ -87,10 +96,15 @@ def on_c_move(self, ds, move_aet, context, info):
     # Import stored SOP Instances
     instances = []
     matching = []
+    filename = get_testdata_files('CT_small.dcm')[0]
+    filename2 = get_testdata_files("rtplan.dcm")[0]
+    instances.append(dcmread(filename))
+    instances.append(dcmread(filename2))
+    """
     fdir = '/path/to/directory'
     for fpath in os.listdir(fdir):
         instances.append(dcmread(os.path.join(fdir, fpath)))
-
+    """
     if ds.QueryRetrieveLevel == 'PATIENT':
         if 'PatientID' in ds:
             matching = [
@@ -100,14 +114,13 @@ def on_c_move(self, ds, move_aet, context, info):
         # Skip the other possible attributes...
 
     # Skip the other QR levels...
-
     # Yield the total number of C-STORE sub-operations required
     yield len(instances)
-
     # Yield the matching instances
     for instance in matching:
         # Pending
         yield (0xFF00, instance)
+
 
 ae.on_c_move = on_c_move
 

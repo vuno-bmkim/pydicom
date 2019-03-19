@@ -67,4 +67,4 @@ def on_c_store(ds, context, info):
 ae.on_c_store = on_c_store
 
 # Start listening for incoming association requests in blocking mode
-ae.start_server(('', 11112), block=True)
+ae.start_server(('', 11113), block=True)
