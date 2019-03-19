@@ -33,13 +33,14 @@ ext_neg = [role]
 # We need to supply a Unique Key Attribute for each level above the
 #   Query/Retrieve level
 ds = Dataset()
-ds.QueryRetrieveLevel = 'SERIES'
+ds.QueryRetrieveLevel = 'PATIENT'
 # Unique key for PATIENT level
-ds.PatientID = '1234567'
+ds.PatientID = '1CT1'
 # Unique key for STUDY level
 ds.StudyInstanceUID = '1.2.3'
 # Unique key for SERIES level
 ds.SeriesInstanceUID = '1.2.3.4'
+
 
 # Implement the AE.on_c_store callback
 def on_c_store(ds, context, info):
@@ -78,10 +79,11 @@ def on_c_store(ds, context, info):
     ds.is_implicit_VR = context.transfer_syntax.is_implicit_VR
 
     # Save the dataset using the SOP Instance UID as the filename
-    ds.save_as(ds.SOPInstanceUID, write_like_original=False)
+    ds.save_as(ds.SOPInstanceUID + ".dcm", write_like_original=False)
 
     # Return a 'Success' status
     return 0x0000
+
 
 ae.on_c_store = on_c_store
 

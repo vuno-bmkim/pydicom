@@ -11,7 +11,7 @@ ae.add_requested_context(PatientRootQueryRetrieveInformationModelFind)
 
 # Create our Identifier (query) dataset
 ds = Dataset()
-ds.PatientName = 'CITIZEN^Jan'
+ds.PatientName = 'Last^First^mid^pre'
 ds.QueryRetrieveLevel = 'PATIENT'
 
 # Associate with peer AE at IP 127.0.0.1 and port 11112
@@ -25,13 +25,13 @@ if assoc.is_established:
 
     for (status, identifier) in responses:
         if status:
-           print('C-FIND query status: 0x{0:04x}'.format(status.Status))
+            print('C-FIND query status: 0x{0:04x}'.format(status.Status))
 
-           # If the status is 'Pending' then `identifier` is the C-FIND response
-           if status.Status in (0xFF00, 0xFF01):
-               print(identifier)
+            # If the status is 'Pending' then `identifier` is the C-FIND response
+            if status.Status in (0xFF00, 0xFF01):
+                print(identifier)
         else:
-           print('Connection timed out, was aborted or received invalid response')
+            print('Connection timed out, was aborted or received invalid response')
 
     # Release the association
     assoc.release()

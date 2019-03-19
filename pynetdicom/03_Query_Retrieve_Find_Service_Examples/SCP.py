@@ -1,6 +1,7 @@
 import os
 
 from pydicom import dcmread
+from pydicom.data import get_testdata_files
 from pydicom.dataset import Dataset
 
 from pynetdicom import AE
@@ -48,9 +49,16 @@ def on_c_find(ds, context, info):
     # Import stored SOP Instances
     instances = []
     matching = []
+    filename = get_testdata_files('CT_small.dcm')[0]
+    filename2 = get_testdata_files("rtplan.dcm")[0]
+    instances.append(dcmread(filename))
+    instances.append(dcmread(filename2))
+    """
+    print(filename)
     fdir = '/path/to/directory'
     for fpath in os.listdir(fdir):
         instances.append(dcmread(os.path.join(fdir, fpath)))
+    """
 
     if 'QueryRetrieveLevel' not in ds:
         # Failure
