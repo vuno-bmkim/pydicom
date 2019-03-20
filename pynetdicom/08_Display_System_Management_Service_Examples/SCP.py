@@ -1,3 +1,4 @@
+from pydicom.dataset import Dataset
 from pynetdicom import AE
 from pynetdicom.sop_class import DisplaySystemSOPClass
 
@@ -6,6 +7,14 @@ ae = AE()
 
 # Add the supported presentation context
 ae.add_supported_context(DisplaySystemSOPClass)
+
+
+def create_attribute_list(attr):
+    ds = Dataset()
+    ds.SOPClassUID = '1.2.840.10008.5.1.1.40'
+    ds.SOPInstanceUID = '1.2.840.10008.5.1.1.40.1'
+    return ds
+
 
 def on_n_get(attr, context, info):
     """Callback for when an N-GET request is received.
@@ -44,11 +53,12 @@ def on_n_get(attr, context, info):
 
     # If Display System Management returns an attribute list then the
     # SOP Class UID and SOP Instance UID must always be as given below
-    assert dataset.SOPClassUID = '1.2.840.10008.5.1.1.40'
-    assert dataset.SOPInstanceUID = '1.2.840.10008.5.1.1.40.1'
+    assert(dataset.SOPClassUID == '1.2.840.10008.5.1.1.40')
+    assert(dataset.SOPInstanceUID == '1.2.840.10008.5.1.1.40.1')
 
     # Return status, dataset
     return 0x0000, dataset
+
 
 ae.on_n_get = on_n_get
 
